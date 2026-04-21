@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiJaring - Sistem Manajemen Inventaris Mini</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+
+<header>
+    <div class="logo-area">
+        <img src="logo.png" alt="Logo SiJaring" class="logo-img">
+        <div class="judul-sistem">
+            <h1>SiJaring</h1>
+            <p>Sistem Manajemen Inventaris Alat Jaringan Komputer</p>
+        </div>
+    </div>
+</header>
+
+<nav>
+    <ul>
+        <li><a href="#" class="aktif">Beranda</a></li>
+        <li><a href="#form-barang">Tambah Barang</a></li>
+        <li><a href="#daftar-barang">Daftar Barang</a></li>
+        <li><a href="#statistik">Statistik</a></li>
+    </ul>
+</nav>
+
+<main class="container-utama">
+
+    <!-- ========================================
+         SIDEBAR STATISTIK
+         ======================================== -->
+    <aside class="sidebar" id="statistik">
+        <div class="stat-box">
+            <h3>Total Item</h3>
+            <div class="angka" id="stat-total-item">0</div>
+            <div class="keterangan">jenis barang terdaftar</div>
+        </div>
+
+        <div class="stat-box hijau">
+            <h3>Total Nilai Inventaris</h3>
+            <div class="angka" id="stat-total-nilai">Rp 0</div>
+            <div class="keterangan">nilai keseluruhan stok</div>
+        </div>
+
+        <div class="stat-box kuning">
+            <h3>Stok Menipis</h3>
+            <div class="angka" id="stat-stok-menipis">0</div>
+            <div class="keterangan">barang dengan stok &lt; 5</div>
+        </div>
+
+        <div class="sidebar-info">
+            <h3>Ringkasan Kategori</h3>
+            <ul id="ringkasan-kategori">
+                <li>Belum ada data <span>0</span></li>
+            </ul>
+        </div>
+    </aside>
+
+    <!-- ========================================
+         KONTEN UTAMA
+         ======================================== -->
+    <div class="konten">
+
+        <!-- FORM TAMBAH / EDIT BARANG -->
+        <section class="card" id="form-barang">
+            <h2 id="judul-form">Form Tambah Barang</h2>
+
+            <form id="form-input">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="kode_barang">Kode Barang <span class="wajib">*</span></label>
+                        <input type="text" id="kode_barang" placeholder="Contoh: JRN-001">
+                        <small class="pesan-error" id="error-kode_barang"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nama_barang">Nama Barang <span class="wajib">*</span></label>
+                        <input type="text" id="nama_barang" placeholder="Contoh: Mikrotik RB941">
+                        <small class="pesan-error" id="error-nama_barang"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="kategori">Kategori <span class="wajib">*</span></label>
+                        <select id="kategori">
+                            <option value="">-- Pilih Kategori --</option>
+                            <option value="Router">Router</option>
+                            <option value="Switch">Switch</option>
+                            <option value="Kabel">Kabel</option>
+                            <option value="Wireless">Wireless</option>
+                            <option value="Aksesoris">Aksesoris</option>
+                        </select>
+                        <small class="pesan-error" id="error-kategori"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="stok">Stok <span class="wajib">*</span></label>
+                        <input type="number" id="stok" placeholder="Contoh: 10" min="0">
+                        <small class="pesan-error" id="error-stok"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="harga">Harga (Rp) <span class="wajib">*</span></label>
+                        <input type="number" id="harga" placeholder="Contoh: 350000" min="0">
+                        <small class="pesan-error" id="error-harga"></small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tanggal_masuk">Tanggal Masuk <span class="wajib">*</span></label>
+                        <input type="date" id="tanggal_masuk">
+                        <small class="pesan-error" id="error-tanggal_masuk"></small>
+                    </div>
+                </div>
+
+                <div class="form-tombol">
+                    <button type="submit" class="tombol-simpan" id="tombol-submit">Simpan Barang</button>
+                    <button type="button" class="tombol-reset" id="tombol-batal">Batal</button>
+                </div>
+            </form>
+
+            <div id="notifikasi" class="notifikasi"></div>
+        </section>
+
+        <!-- DAFTAR BARANG -->
+        <section class="card" id="daftar-barang">
+            <h2>Daftar Barang</h2>
+
+            <div class="toolbar">
+                <input type="text" id="input-cari" placeholder="🔍 Cari berdasarkan nama atau kode barang...">
+                <select id="filter-kategori">
+                    <option value="">Semua Kategori</option>
+                    <option value="Router">Router</option>
+                    <option value="Switch">Switch</option>
+                    <option value="Kabel">Kabel</option>
+                    <option value="Wireless">Wireless</option>
+                    <option value="Aksesoris">Aksesoris</option>
+                </select>
+            </div>
+
+            <div class="tabel-wrapper">
+                <table id="tabel-barang">
+                    <thead>
+                        <tr>
+                            <th>No</th>
+                            <th>Kode</th>
+                            <th>Nama Barang</th>
+                            <th>Kategori</th>
+                            <th>Stok</th>
+                            <th>Harga (Rp)</th>
+                            <th>Tgl Masuk</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody-barang">
+                        <!-- diisi oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <p class="info-kosong" id="info-kosong">Belum ada barang. Silakan tambahkan melalui form di atas.</p>
+        </section>
+
+    </div>
+
+</main>
+
+<footer>
+    <p>&copy; 2026 <strong>SiJaring</strong> &mdash; Sistem Manajemen Inventaris Mini. Tugas Praktik Pemrograman Web.</p>
+</footer>
+
+</body>
+</html>
